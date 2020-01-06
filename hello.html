@@ -1,3 +1,87 @@
-<html>
-  
-</html>
+<title>snake!</title>
+<canvas name=cavas width=300 height=300 style="border: solid 1px red;">
+
+</canvas>
+<script>
+  canvas = document.body.children[0]
+  context = canvas.getContext('2d')
+  context.scale(10, 10)
+
+  document.body.onkeyup = function (e) {
+    if (e.which == 40) {
+      direction = [0, 1]; //moves up
+    } else if (e.which == 38) {
+      direction = [0, -1]; //moves down
+    } else if (e.which == 39) {
+      direction = [1, 0]; //moves right
+    } else if (e.which == 37) {
+      direction = [-1, 0]; //moves left
+    }
+  }
+  snake = [
+    [0, 1],
+    [0, 2],
+    [0, 3],
+    [1, 3],
+    [1, 4]
+  ]
+  mouse = [8, 3]; //first location of mouse
+  score = 0; //not used but trying to implement score system
+  direction = [1, 0];
+  difficulty = 250;
+  function updateLoop() {
+
+    snake.unshift([
+      snake[0][0] + direction[0],
+      snake[0][1] + direction[1]
+    ])
+
+    if (snake[0][0] == mouse[0] && snake[0][1] == mouse[1]) {
+      mouse = [Math.random(0) * 20 | 0, Math.random(0) * 20 | 0];
+      score++;
+    } else {
+      snake.pop();
+    }
+    //lose condition, resets difficulty speed
+    let lose = () => {
+      alert('You lose!');
+      snake = [[3,8]];
+      direction = [1,0];
+      difficulty = 250;
+      clearInterval(interval);
+      interval = setInterval(updateLoop, difficulty);
+    }
+    //check if snake runs into it's own body
+    for(i = 1; i < snake.length; i++) {
+      if(snake[i][0] == snake[0][0] && snake[i][1] == snake[0][1]) {
+        lose();
+      }
+    }
+    //check if snake runs into walls
+    if(snake[0][0] == -1 || snake[0][0] == 301 || 
+       snake[0][1] == -1 || snake[0][1] == 301)lose();
+
+    if(difficulty == 250 && snake.length > 7) { //once you eat 
+      difficulty = 150;
+      clearInterval(interval);
+      interval = setInterval(updateLoop, difficulty);
+    } else if (difficulty == 150 && snake.length > 15) {
+      difficulty = 100;
+      clearInterval(interval);
+      interval = setInterval(updateLoop, difficulty);
+    }
+    draw()
+  }
+
+  function draw() {
+    context.clearRect(0, 0, 300, 300);
+    context.fillStyle = 'Grey';
+    context.fillRect(mouse[0], mouse[1], 1, 1);
+    context.fillStyle = 'Green';
+    snake.forEach(function ([x, y]) {
+      context.fillRect(x, y, 1, 1);
+    })
+  }
+  interval = setInterval(updateLoop, difficulty);
+
+</script>
