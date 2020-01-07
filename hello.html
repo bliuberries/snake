@@ -29,7 +29,7 @@
   mouse = [8, 3]; //first location of mouse
   score = 0; //not used but trying to implement score system
   direction = [1, 0]; //set direction to turn right
-  difficulty = 250; // first level difficulty
+  let level = 1;
   function updateLoop() {
 
     //always expands snake
@@ -47,34 +47,35 @@
     //lose condition, resets difficulty speed
     let lose = () => {
       alert('You lose!');
-      snake = [[3,8]];
-      direction = [1,0];
-      difficulty = 250;
+      snake = [[3, 8]];
+      direction = [1, 0];
+      level = 1;
       clearInterval(interval);
-      interval = setInterval(updateLoop, difficulty);
+      interval = setInterval(updateLoop, 250);
     }
     //check if snake runs into it's own body
-    for(i = 1; i < snake.length; i++) {
-      if(snake[i][0] == snake[0][0] && snake[i][1] == snake[0][1]) {
+    for (i = 1; i < snake.length; i++) {
+      if (snake[i][0] == snake[0][0] && snake[i][1] == snake[0][1]) {
         lose();
       }
     }
     //check if snake runs into walls
-    if(snake[0][0] == -1 || snake[0][0] == 301 || 
-       snake[0][1] == -1 || snake[0][1] == 301)lose();
+    if (snake[0][0] == -1 || snake[0][0] == 30 ||
+      snake[0][1] == -1 || snake[0][1] == 30) {
+      lose();
+    }
 
-    if(difficulty == 250 && snake.length > 7) { //increase difficulty 
-      difficulty = 150;
+    if (level === 1 && snake.length > 7) { //increase difficulty 
+      level = 2;
       clearInterval(interval);
-      interval = setInterval(updateLoop, difficulty);
-    } else if (difficulty == 150 && snake.length > 15) { //increase difficulty 
-      difficulty = 100;
+      interval = setInterval(updateLoop, 150);
+    } else if (level === 2 && snake.length > 15) { //increase difficulty 
+    level = 3;
       clearInterval(interval);
-      interval = setInterval(updateLoop, difficulty);
-    } else if (difficulty = 100 && snake.length > 50) { //insane mode
-      difficulty = 50;
+      interval = setInterval(updateLoop, 100);
+    } else if (level === 3 && snake.length > 50) { //insane mode
       clearInterval(interval);
-      interval = setInterval(updateLoop, difficulty);
+      interval = setInterval(updateLoop, 50);
     }
     draw()
   }
@@ -93,6 +94,6 @@
       context.fillRect(x, y, 1, 1);
     })
   }
-  interval = setInterval(updateLoop, difficulty);
+  interval = setInterval(updateLoop, 250);
 
 </script>
